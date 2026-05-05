@@ -29,6 +29,10 @@ def get_score_threshold() -> int:
         return 3
 
 
+def env_is_true(name: str) -> bool:
+    return os.getenv(name, "").lower() == "true"
+
+
 def run_once(scraper: WGListingScraper, db: SeenListingsDB, notifier: TelegramNotifier) -> None:
     listings = scraper.fetch_listings()
     new_listings = [listing for listing in listings if not db.has_seen(listing.listing_id)]
@@ -97,6 +101,11 @@ def main() -> None:
     notifier = TelegramNotifier(telegram_token, telegram_chat_id)
 
     with SeenListingsDB(db_path) as db:
+        if env_is_true("RUN_ONCE"):
+            logging.info("Running WG-Gesucht watcher once")
+            run_once(scraper, db, notifier)
+            return
+
         logging.info("Starting WG-Gesucht watcher with %s minute interval", interval_seconds // 60)
         while True:
             try:

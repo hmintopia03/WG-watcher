@@ -24,4 +24,5 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           WG_SEARCH_URL: ${{ secrets.WG_SEARCH_URL }}
           SCORE_THRESHOLD: ${{ secrets.SCORE_THRESHOLD }}
+          RUN_ONCE: "true"
         run: python main.py
